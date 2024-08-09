@@ -12,79 +12,61 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProductsController = void 0;
+exports.OrdersController = void 0;
 const common_1 = require("@nestjs/common");
-const pagination_dto_1 = require("./common/dto/pagination.dto");
 const microservices_1 = require("@nestjs/microservices");
 const orders_service_1 = require("./orders.service");
-let ProductsController = class ProductsController {
+const change_order_status_dto_1 = require("./dto/change-order-status.dto");
+const create_order_dto_1 = require("./dto/create-order.dto");
+const order_pagination_dto_1 = require("./dto/order-pagination.dto");
+let OrdersController = class OrdersController {
     constructor(ordersService) {
         this.ordersService = ordersService;
     }
     create(createOrderDto) {
         return this.ordersService.create(createOrderDto);
     }
-    findAll(PaginationDto) {
-        return this.ordersService.findAll(PaginationDto);
+    findAll(orderPaginationDto) {
+        return this.ordersService.findAll(orderPaginationDto);
     }
     findOne(id) {
         return this.ordersService.findOne(id);
     }
-    update(updateOrderDto) {
-        return this.ordersService.update(updateOrderDto.id, updateOrderDto);
-    }
-    remove(id) {
-        return this.ordersService.remove(id);
+    changeOrderStatus(changeOrderStatusDto) {
+        return this.ordersService.changeStatus(changeOrderStatusDto);
     }
 };
-exports.ProductsController = ProductsController;
+exports.OrdersController = OrdersController;
 __decorate([
-    (0, microservices_1.MessagePattern)({
-        cmd: 'orders_product',
-    }),
+    (0, microservices_1.MessagePattern)('createOrder'),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [create_order_dto_1.CreateOrderDto]),
     __metadata("design:returntype", void 0)
-], ProductsController.prototype, "create", null);
+], OrdersController.prototype, "create", null);
 __decorate([
-    (0, microservices_1.MessagePattern)({
-        cmd: 'find_all_orders',
-    }),
+    (0, microservices_1.MessagePattern)('findAllOrders'),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [pagination_dto_1.PaginationDto]),
+    __metadata("design:paramtypes", [order_pagination_dto_1.OrderPaginationDto]),
     __metadata("design:returntype", void 0)
-], ProductsController.prototype, "findAll", null);
+], OrdersController.prototype, "findAll", null);
 __decorate([
-    (0, microservices_1.MessagePattern)({
-        cmd: 'find_one_order',
-    }),
-    __param(0, (0, microservices_1.Payload)('id')),
+    (0, microservices_1.MessagePattern)('findOneOrder'),
+    __param(0, (0, microservices_1.Payload)('id', common_1.ParseUUIDPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], ProductsController.prototype, "findOne", null);
+], OrdersController.prototype, "findOne", null);
 __decorate([
-    (0, microservices_1.MessagePattern)({
-        cmd: 'update_order',
-    }),
+    (0, microservices_1.MessagePattern)('changeOrderStatus'),
     __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [change_order_status_dto_1.ChangeOrderStatusDto]),
     __metadata("design:returntype", void 0)
-], ProductsController.prototype, "update", null);
-__decorate([
-    (0, microservices_1.MessagePattern)({
-        cmd: 'delete_order',
-    }),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], ProductsController.prototype, "remove", null);
-exports.ProductsController = ProductsController = __decorate([
-    (0, common_1.Controller)('orders'),
+], OrdersController.prototype, "changeOrderStatus", null);
+exports.OrdersController = OrdersController = __decorate([
+    (0, common_1.Controller)(),
     __metadata("design:paramtypes", [orders_service_1.OrdersService])
-], ProductsController);
+], OrdersController);
 //# sourceMappingURL=orders.controller.js.map
