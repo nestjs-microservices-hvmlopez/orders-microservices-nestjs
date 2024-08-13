@@ -5,9 +5,9 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { ChangeOrderStatusDto } from './dto/change-order-status.dto';
 import { OrderPaginationDto } from './dto/order-pagination.dto';
 export declare class OrdersService extends PrismaClient implements OnModuleInit {
-    private readonly productClient;
+    private readonly client;
     private readonly logger;
-    constructor(productClient: ClientProxy);
+    constructor(client: ClientProxy);
     onModuleInit(): Promise<void>;
     create(createOrderDto: CreateOrderDto): Promise<{
         orderItems: {
@@ -26,7 +26,15 @@ export declare class OrdersService extends PrismaClient implements OnModuleInit 
         updatedAt: Date;
     }>;
     findAll(orderPaginationDto: OrderPaginationDto): Promise<{
-        data: {
+        data: ({
+            orderItems: {
+                id: string;
+                productId: number;
+                quantity: number;
+                price: number;
+                orderId: string | null;
+            }[];
+        } & {
             id: string;
             totalAmount: number;
             totalItems: number;
@@ -35,7 +43,7 @@ export declare class OrdersService extends PrismaClient implements OnModuleInit 
             paidAt: Date | null;
             createdAt: Date;
             updatedAt: Date;
-        }[];
+        })[];
         meta: {
             total: number;
             page: number;

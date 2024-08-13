@@ -8,6 +8,5 @@ export declare const envs: {
     DB_HOST: string;
     DB_PORT: number;
     DB_USER: string;
-    PRODUCT_MICROSERVICE_HOST: string;
-    PRODUCT_MICROSERVICE_PORT: number;
+    NATS_SERVERS: string[];
 };

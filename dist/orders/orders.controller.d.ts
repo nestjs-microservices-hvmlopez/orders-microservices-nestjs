@@ -22,7 +22,15 @@ export declare class OrdersController {
         updatedAt: Date;
     }>;
     findAll(orderPaginationDto: OrderPaginationDto): Promise<{
-        data: {
+        data: ({
+            orderItems: {
+                id: string;
+                productId: number;
+                quantity: number;
+                price: number;
+                orderId: string | null;
+            }[];
+        } & {
             id: string;
             totalAmount: number;
             totalItems: number;
@@ -31,7 +39,7 @@ export declare class OrdersController {
             paidAt: Date | null;
             createdAt: Date;
             updatedAt: Date;
-        }[];
+        })[];
         meta: {
             total: number;
             page: number;

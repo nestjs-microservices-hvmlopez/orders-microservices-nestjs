@@ -10,8 +10,7 @@ interface EnvVars {
   DB_HOST: string;
   DB_PORT: number;
   DB_USER: string;
-  PRODUCT_MICROSERVICE_HOST: string;
-  PRODUCT_MICROSERVICE_PORT: number;
+  NATS_SERVERS: string[];
 }
 
 const envSchema = joi
@@ -24,12 +23,14 @@ const envSchema = joi
     DB_HOST: joi.string().required(),
     DB_PORT: joi.number().required(),
     DB_USER: joi.string().required(),
-    PRODUCT_MICROSERVICE_HOST: joi.string().required(),
-    PRODUCT_MICROSERVICE_PORT: joi.number().required(),
+    NATS_SERVERS: joi.array().items(joi.string()).required(),
   })
   .unknown(true);
 
-const { error, value } = envSchema.validate(process.env);
+const { error, value } = envSchema.validate({
+  ...process.env,
+  NATS_SERVERS: process.env.NATS_SERVERS?.split(','),
+});
 
 if (error) {
   throw new Error(`Config validation error: ${error.message}`);
@@ -45,6 +46,5 @@ export const envs = {
   DB_HOST: envVars.DB_HOST,
   DB_PORT: envVars.DB_PORT,
   DB_USER: envVars.DB_USER,
-  PRODUCT_MICROSERVICE_HOST: envVars.PRODUCT_MICROSERVICE_HOST,
-  PRODUCT_MICROSERVICE_PORT: envVars.PRODUCT_MICROSERVICE_PORT,
+  NATS_SERVERS: envVars.NATS_SERVERS,
 };

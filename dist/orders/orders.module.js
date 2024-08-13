@@ -10,26 +10,13 @@ exports.OrdersModule = void 0;
 const common_1 = require("@nestjs/common");
 const orders_service_1 = require("./orders.service");
 const orders_controller_1 = require("./orders.controller");
-const microservices_1 = require("@nestjs/microservices");
-const services_1 = require("../config/services");
-const envs_1 = require("../config/envs");
+const nats_module_1 = require("../transports/nats.module");
 let OrdersModule = class OrdersModule {
 };
 exports.OrdersModule = OrdersModule;
 exports.OrdersModule = OrdersModule = __decorate([
     (0, common_1.Module)({
-        imports: [
-            microservices_1.ClientsModule.register([
-                {
-                    name: services_1.PRODUCT_SERVICE,
-                    transport: microservices_1.Transport.TCP,
-                    options: {
-                        host: envs_1.envs.PRODUCT_MICROSERVICE_HOST,
-                        port: envs_1.envs.PRODUCT_MICROSERVICE_PORT,
-                    },
-                },
-            ]),
-        ],
+        imports: [nats_module_1.NatsModule],
         controllers: [orders_controller_1.OrdersController],
         providers: [orders_service_1.OrdersService],
     })

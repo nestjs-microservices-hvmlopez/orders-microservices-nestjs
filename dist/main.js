@@ -8,9 +8,9 @@ const envs_1 = require("./config/envs");
 async function bootstrap() {
     const logger = new common_1.Logger('Main-orders-microservice');
     const app = await core_1.NestFactory.createMicroservice(app_module_1.AppModule, {
-        transport: microservices_1.Transport.TCP,
+        transport: microservices_1.Transport.NATS,
         options: {
-            port: envs_1.envs.PORT,
+            servers: envs_1.envs.NATS_SERVERS,
         },
     });
     app.useGlobalPipes(new common_1.ValidationPipe({

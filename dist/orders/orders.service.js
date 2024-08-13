@@ -19,9 +19,9 @@ const microservices_1 = require("@nestjs/microservices");
 const services_1 = require("../config/services");
 const rxjs_1 = require("rxjs");
 let OrdersService = class OrdersService extends client_1.PrismaClient {
-    constructor(productClient) {
+    constructor(client) {
         super();
-        this.productClient = productClient;
+        this.client = client;
         this.logger = new common_1.Logger('OrdersService');
     }
     async onModuleInit() {
@@ -32,7 +32,7 @@ let OrdersService = class OrdersService extends client_1.PrismaClient {
         try {
             const { items = [] } = createOrderDto;
             const productsIds = items.map((item) => item.productId);
-            const products = await (0, rxjs_1.firstValueFrom)(this.productClient.send({ cmd: 'validate_products' }, productsIds));
+            const products = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'validate_products' }, productsIds));
             const totalAmount = createOrderDto.items.reduce((acc, orderItem) => {
                 const price = products.find((product) => product.id === orderItem.productId).price;
                 return price * orderItem.quantity + acc;
@@ -96,6 +96,9 @@ let OrdersService = class OrdersService extends client_1.PrismaClient {
                 where: {
                     status: orderPaginationDto.status,
                 },
+                include: {
+                    orderItems: true,
+                },
             }),
             meta: {
                 total: totalPages,
@@ -124,7 +127,7 @@ let OrdersService = class OrdersService extends client_1.PrismaClient {
             });
         }
         const productsIds = order.orderItems.map((orderItem) => orderItem.productId);
-        const products = await (0, rxjs_1.firstValueFrom)(this.productClient.send({ cmd: 'validate_products' }, productsIds));
+        const products = await (0, rxjs_1.firstValueFrom)(this.client.send({ cmd: 'validate_products' }, productsIds));
         return {
             ...order,
             orderItem: order.orderItems.map((orderItem) => {
@@ -151,7 +154,7 @@ let OrdersService = class OrdersService extends client_1.PrismaClient {
 exports.OrdersService = OrdersService;
 exports.OrdersService = OrdersService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, common_1.Inject)(services_1.PRODUCT_SERVICE)),
+    __param(0, (0, common_1.Inject)(services_1.NATS_SERVICE)),
     __metadata("design:paramtypes", [microservices_1.ClientProxy])
 ], OrdersService);
 //# sourceMappingURL=orders.service.js.map
